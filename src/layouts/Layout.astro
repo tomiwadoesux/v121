@@ -4,7 +4,6 @@ import '@fontsource/inter/latin-500.css';
 import { ViewTransitions } from 'astro:transitions';
 // import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
-
 interface Props {
   description: string;
   title: string;
@@ -17,7 +16,7 @@ const { description, title } = Astro.props;
 <html lang="en" x-cloak x-data :class="{ 'dark': $store.theme.isDark }">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- Added initial-scale=1 for mobile optimization -->
     <link rel="apple-touch-icon" sizes="180x180" href="myicon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="myicon.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="myicon.png" />
@@ -49,22 +48,19 @@ const { description, title } = Astro.props;
 
       Alpine.store('theme', {
         init() {
-          this.isDark = (() => {
-            if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-              return localStorage.getItem('theme') === 'dark';
-            }
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-              return true;
-            }
-            return false;
-          })();
+          // Force dark mode, no light mode logic
+          this.isDark = true;
+          // Always add dark class to <html> element
+          document.documentElement.classList.add('dark');
         },
 
-        isDark: false,
+        isDark: true, // Always true since we're enforcing dark mode
 
         toggle() {
-          this.isDark = !this.isDark;
-          localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+          // Optional: If you want a toggle function, but it won't change to light mode.
+          // You can just keep the toggle functionality or disable it completely.
+          this.isDark = true; // Always dark
+          localStorage.setItem('theme', 'dark');
         },
       });
 
